@@ -1,7 +1,7 @@
 //jshint esversion:6
 require("dotenv").config();
 const mongoose = require("mongoose");
-const encrypt = require("mongoose-encryption");
+//const encrypt = require("mongoose-encryption");
 
 // create a schema
 const Schema = mongoose.Schema;
@@ -13,11 +13,11 @@ const userSchema = new Schema({
 });
 
 // encrypt the password field in the mongoose user collection
-const secret = process.env.SECRET;
-userSchema.plugin(encrypt, {
-    secret:secret,
-    encryptedFields:["password"]
-});
+// const secret = process.env.SECRET;
+// userSchema.plugin(encrypt, {
+//     secret:secret,
+//     encryptedFields:["password"]
+// });
 
 // create a document model
 exports.User = mongoose.model("User", userSchema, "User");
