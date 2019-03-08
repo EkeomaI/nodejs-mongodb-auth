@@ -1,7 +1,8 @@
 //jshint esversion:6
 require("dotenv").config();
 const mongoose = require("mongoose");
-//const encrypt = require("mongoose-encryption");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 // create a schema
 const Schema = mongoose.Schema;
@@ -12,12 +13,19 @@ const userSchema = new Schema({
     password: String
 });
 
-// encrypt the password field in the mongoose user collection
-// const secret = process.env.SECRET;
-// userSchema.plugin(encrypt, {
-//     secret:secret,
-//     encryptedFields:["password"]
-// });
+// use to hash and salt passwords and save users to vhe mongodb database
+userSchema.plugin(passportLocalMongoose);
 
 // create a document model
-exports.User = mongoose.model("User", userSchema, "User");
+const User = new mongoose.model("User", userSchema, "User");
+
+passport.use(User.createStrategy());
+
+// serialise: create the authentication cookie
+passport.serializeUser(User.serializeUser());
+
+// deserialise: unpack the cookie to extract user Info
+passport.deserializeUser(User.deserializeUser());
+
+
+exports.User = User;
